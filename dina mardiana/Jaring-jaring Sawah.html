@@ -1,0 +1,451 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Jaringan Jaringan Sawah</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:wght@600;800&display=swap">
+<style>
+/* Layout: peta jaring-jaring di kiri, panel kegiatan 4 langkah di kanan; satu kolom di layar sempit */
+:root{
+  --bg:#edf2ec; --surface:#fbfdfa; --surface2:#e2eadf; --fg:#14231a; --muted:#4b5f52; --line:#c3d0c3;
+  --accent:#23744a; --accent-fg:#ffffff;
+  --prod:#2f8a3f; --prod-bg:#d5ecd3; --prod-fg:#1b5a27;
+  --herb:#b97a06; --herb-bg:#f6e6bd; --herb-fg:#7a4f00;
+  --karn:#c4492f; --karn-bg:#f8d9d0; --karn-fg:#8a2a16;
+  --urai:#7b6a58; --urai-bg:#e6dfd6; --urai-fg:#54473a;
+  --up:#1f6fa8; --up-bg:#d6e8f6; --down:#b4381f; --down-bg:#f8d9d0; --flat:#5d6c62; --flat-bg:#e1e7e1;
+  --ok:#1f7a45; --ok-bg:#d3ecdc; --bad:#a8321e; --bad-bg:#f8dcd5;
+  --edge:#6c8173; --hot:#23744a;
+  --f-display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101813; --surface:#17231b; --surface2:#1f3024; --fg:#e6f0e8; --muted:#a2b5a8; --line:#2f4636;
+  --accent:#5cc58b; --accent-fg:#0b1a11;
+  --prod:#5cc26b; --prod-bg:#1d3a22; --prod-fg:#a6e3ae;
+  --herb:#e2a63a; --herb-bg:#3d3015; --herb-fg:#f1cd80;
+  --karn:#ec7a62; --karn-bg:#41201a; --karn-fg:#f4b3a4;
+  --urai:#b09d88; --urai-bg:#34302a; --urai-fg:#d8c9b8;
+  --up:#6db4ea; --up-bg:#16324a; --down:#f08a74; --down-bg:#41201a; --flat:#a2b5a8; --flat-bg:#26352b;
+  --ok:#68d396; --ok-bg:#173826; --bad:#f08a74; --bad-bg:#40211b;
+  --edge:#7f9886; --hot:#5cc58b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101813; --surface:#17231b; --surface2:#1f3024; --fg:#e6f0e8; --muted:#a2b5a8; --line:#2f4636;
+  --accent:#5cc58b; --accent-fg:#0b1a11;
+  --prod:#5cc26b; --prod-bg:#1d3a22; --prod-fg:#a6e3ae;
+  --herb:#e2a63a; --herb-bg:#3d3015; --herb-fg:#f1cd80;
+  --karn:#ec7a62; --karn-bg:#41201a; --karn-fg:#f4b3a4;
+  --urai:#b09d88; --urai-bg:#34302a; --urai-fg:#d8c9b8;
+  --up:#6db4ea; --up-bg:#16324a; --down:#f08a74; --down-bg:#41201a; --flat:#a2b5a8; --flat-bg:#26352b;
+  --ok:#68d396; --ok-bg:#173826; --bad:#f08a74; --bad-bg:#40211b;
+  --edge:#7f9886; --hot:#5cc58b; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.9rem,5vw,2.8rem);font-weight:800;letter-spacing:-.01em}
+h2{font-size:1.3rem;font-weight:800}
+h3{font-size:1.05rem;font-weight:600}
+p{margin:0}
+.head{display:flex;flex-direction:column;gap:8px}
+.kicker{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.goal{max-width:62ch;color:var(--muted)}
+.goal b{color:var(--fg)}
+
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0;padding:0;list-style:none}
+.steps button{width:100%;text-align:left;font:inherit;color:var(--fg);background:var(--surface);border:2px solid var(--line);
+  border-radius:10px;padding:10px 12px;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-height:60px}
+.steps button small{color:var(--muted);font-size:.78rem}
+.steps button b{font-family:var(--f-display);font-size:.98rem}
+.steps button[aria-current="step"]{border-color:var(--accent);background:var(--surface2)}
+.steps button:hover{border-color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.main{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}
+.web{display:flex;flex-direction:column;gap:10px}
+svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:6px 10px;font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:2px 10px 2px 6px;border-radius:99px;font-weight:700;font-size:.82rem}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.r-prod{background:var(--prod-bg);color:var(--prod-fg)} .r-prod i{background:var(--prod)}
+.r-herb{background:var(--herb-bg);color:var(--herb-fg)} .r-herb i{background:var(--herb)}
+.r-karn{background:var(--karn-bg);color:var(--karn-fg)} .r-karn i{background:var(--karn)}
+.r-urai{background:var(--urai-bg);color:var(--urai-fg)} .r-urai i{background:var(--urai)}
+.note{font-size:.85rem;color:var(--muted)}
+
+.node{cursor:pointer}
+.node circle.body{stroke-width:3;transition:opacity .2s}
+.node text.lbl{font-family:var(--f-body);font-weight:700;font-size:15px;fill:var(--fg);text-anchor:middle}
+.node text.em{font-size:30px;text-anchor:middle;dominant-baseline:central}
+.node.sel circle.ring{opacity:1}
+.node circle.ring{fill:none;stroke:var(--accent);stroke-width:3;stroke-dasharray:5 4;opacity:0}
+.node.out circle.body{opacity:.3;stroke-dasharray:6 5}
+.node.out text.em{opacity:.3}
+.node:focus-visible{outline:none}
+.node:focus-visible circle.ring{opacity:1;stroke-dasharray:none}
+.node .cross{display:none;stroke:var(--down);stroke-width:5;stroke-linecap:round}
+.node.out .cross{display:inline}
+.bd{display:none}
+.bd.on{display:inline}
+.bd circle{stroke:var(--surface);stroke-width:2}
+.bd text{font-family:var(--f-display);font-weight:800;font-size:15px;text-anchor:middle;dominant-baseline:central;fill:#fff}
+.bd.up circle{fill:var(--up)} .bd.down circle{fill:var(--down)} .bd.flat circle{fill:var(--flat)}
+.edge{stroke:var(--edge);stroke-width:2.2;fill:none;marker-end:url(#arr)}
+.edge.dash{stroke-dasharray:6 5}
+.edge.hot{stroke:var(--hot);stroke-width:4.5;marker-end:url(#arrHot)}
+.ah{fill:var(--edge)} .ahHot{fill:var(--hot)}
+.edge.dim{opacity:.25}
+.band{fill:var(--surface2)}
+.bandt{font-family:var(--f-body);font-size:12px;fill:var(--muted);font-weight:700;letter-spacing:.08em}
+
+.panel{display:flex;flex-direction:column;gap:12px}
+.panel h2{display:flex;align-items:center;gap:10px}
+.btn{font:inherit;font-weight:700;border-radius:10px;border:2px solid var(--accent);background:var(--accent);color:var(--accent-fg);padding:8px 16px;cursor:pointer;min-height:44px}
+.btn.alt{background:transparent;color:var(--fg);border-color:var(--line)}
+.btn.alt:hover{border-color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.95rem}
+.kv dt{color:var(--muted);font-weight:700} .kv dd{margin:0}
+.big{font-size:2.6rem;line-height:1}
+.tag{display:inline-block;font-size:.8rem;font-weight:700;padding:2px 10px;border-radius:99px}
+.fb{border-radius:10px;padding:10px 12px;font-size:.95rem;border-left:5px solid var(--line);background:var(--surface2)}
+.fb.ok{background:var(--ok-bg);border-color:var(--ok)}
+.fb.bad{background:var(--bad-bg);border-color:var(--bad)}
+.tok{font:inherit;display:inline-flex;align-items:center;gap:6px;border:2px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:6px 12px;cursor:pointer;min-height:44px;font-weight:700}
+.tok:hover:not(:disabled){border-color:var(--accent)}
+.tok:disabled{opacity:.4;cursor:not-allowed}
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-height:56px;padding:8px;border:2px dashed var(--line);border-radius:10px}
+.chain .slot{display:inline-flex;gap:6px;align-items:center;background:var(--surface2);border-radius:8px;padding:4px 10px;font-weight:700}
+.chain .ar{color:var(--muted);font-weight:700}
+.found{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.found li{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:.92rem}
+.found li.got{background:var(--ok-bg);border-color:var(--ok)}
+.found li .qm{color:var(--muted)}
+.rm{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.rm button{font:inherit;font-weight:700;border:2px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:68px}
+.rm button .e{font-size:1.6rem;line-height:1}
+.rm button[aria-pressed="true"]{border-color:var(--down);background:var(--down-bg)}
+.rm button:hover{border-color:var(--accent)}
+.eff{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.eff li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center;font-size:.93rem}
+.eff .meter{display:block;grid-column:1 / -1;height:8px;background:var(--surface2);border-radius:4px;position:relative}
+.eff .meter::after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:2px;background:var(--line)}
+.eff .meter span{position:absolute;top:0;bottom:0;border-radius:4px}
+.eff .meter .u{left:50%;background:var(--up)} .eff .meter .d{right:50%;background:var(--down)} .eff .meter .f{left:calc(50% - 3px);width:6px;background:var(--flat)}
+.pill{font-size:.78rem;font-weight:700;padding:1px 8px;border-radius:99px}
+.pill.up{background:var(--up-bg);color:var(--up)} .pill.down{background:var(--down-bg);color:var(--down)} .pill.flat{background:var(--flat-bg);color:var(--flat)}
+.think{border-left:5px solid var(--accent);padding:4px 12px;background:var(--surface2);border-radius:0 8px 8px 0}
+.q{display:flex;flex-direction:column;gap:8px}
+.opts{display:flex;flex-direction:column;gap:6px}
+.opt{font:inherit;text-align:left;border:2px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:10px 12px;cursor:pointer;min-height:44px}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt:disabled{cursor:default}
+.prog{height:8px;border-radius:4px;background:var(--surface2);overflow:hidden}
+.prog span{display:block;height:100%;background:var(--accent);transition:width .3s}
+.foot{font-size:.85rem;color:var(--muted)}
+
+@media (max-width:820px){
+  .main{grid-template-columns:minmax(0,1fr)}
+  .steps{grid-template-columns:repeat(2,1fr)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <span class="kicker">IPA Kelas VII · Ekosistem</span>
+    <h1>Jaring-jaring Sawah</h1>
+    <p class="goal"><b>Tujuan belajar:</b> kamu dapat menyusun rantai makanan dari sebuah ekosistem sawah, lalu menjelaskan apa yang terjadi pada keseimbangannya bila satu makhluk hidup hilang.</p>
+  </header>
+
+  <ol class="steps" id="steps"></ol>
+
+  <div class="main">
+    <section class="card web" aria-label="Peta jaring-jaring makanan sawah">
+      <svg id="svg" viewBox="0 0 640 500" role="group" aria-label="Jaring-jaring makanan di sawah">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker>
+          <marker id="arrHot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path class="ahHot" d="M0 0L10 5L0 10z"/></marker>
+        </defs>
+        <g id="edges"></g>
+        <g id="nodes"></g>
+      </svg>
+      <div class="legend" id="legend"></div>
+      <p class="note" id="webnote">Panah menunjukkan arah perpindahan energi: dari yang dimakan menuju yang memakan. Sentuh makhluk hidup untuk mengenalnya.</p>
+    </section>
+
+    <section class="card panel" id="panel" aria-live="polite"></section>
+  </div>
+
+  <p class="foot">Media ini dibuat dengan bantuan KA generatif untuk pembelajaran IPA SMP. Arah naik atau turun pada langkah 3 adalah kecenderungan umum, bukan angka pasti.</p>
+</div>
+
+<script>
+(function(){
+var ROLE={prod:'Produsen',herb:'Konsumen pemakan tumbuhan (herbivora)',karn:'Konsumen pemakan hewan (karnivora)',urai:'Pengurai (dekomposer)'};
+var ROLES=['prod','herb','karn','urai'];
+var SP={
+ padi:{n:'Padi',e:'🌾',r:'prod',x:310,y:415,eats:[],
+  d:'Membuat makanan sendiri dengan fotosintesis, memakai cahaya matahari, air, dan karbon dioksida. Semua makhluk hidup lain di sawah ini bergantung padanya, langsung maupun tidak langsung.'},
+ belalang:{n:'Belalang',e:'🦗',r:'herb',x:170,y:340,eats:['padi'],
+  d:'Memakan daun padi. Belalang menjadi makanan penting bagi katak.'},
+ tikus:{n:'Tikus',e:'🐀',r:'herb',x:450,y:300,eats:['padi'],
+  d:'Memakan bulir dan batang padi. Tikus dimangsa oleh ular dan elang, sehingga ia menghubungkan dua rantai.'},
+ katak:{n:'Katak',e:'🐸',r:'karn',x:90,y:240,eats:['belalang'],
+  d:'Memangsa belalang dan serangga lain. Katak membantu menjaga jumlah belalang agar tidak berlebihan.'},
+ ular:{n:'Ular',e:'🐍',r:'karn',x:200,y:145,eats:['katak','tikus'],
+  d:'Memangsa katak dan tikus. Kedudukannya berbeda tergantung rantainya: lewat tikus ia konsumen tingkat II, lewat belalang dan katak ia konsumen tingkat III.'},
+ elang:{n:'Elang',e:'🦅',r:'karn',x:340,y:50,eats:['ular','tikus'],
+  d:'Pemangsa puncak di sawah ini. Elang memangsa ular dan tikus, dan tidak punya pemangsa alami di sini.'},
+ pengurai:{n:'Jamur dan bakteri',e:'🍄',r:'urai',x:560,y:415,eats:[],
+  d:'Menguraikan bangkai, daun, dan kotoran menjadi zat hara di tanah. Hara itu diserap kembali oleh padi. Pengurai bekerja pada semua tingkat, jadi tidak masuk ke dalam rantai makanan.'}
+};
+var ORDER=['padi','belalang','tikus','katak','ular','elang','pengurai'];
+var EDGES=[['padi','belalang'],['padi','tikus'],['belalang','katak'],['katak','ular'],['tikus','ular'],['ular','elang'],['tikus','elang'],['pengurai','padi',1]];
+function eatenBy(k){return EDGES.filter(function(e){return e[0]===k&&!e[2]}).map(function(e){return e[1]})}
+function nm(k){return SP[k].n}
+function list(a){return a.length?a.map(function(k){return SP[k].e+' '+nm(k)}).join(', '):'tidak ada'}
+
+/* kecenderungan populasi bila satu makhluk hidup hilang: -2 turun banyak ... +2 naik banyak */
+var FX={
+ padi:{belalang:-2,tikus:-2,katak:-1,ular:-1,elang:-1,pengurai:-1},
+ belalang:{padi:1,tikus:1,katak:-2,ular:0,elang:0,pengurai:0},
+ tikus:{padi:0,belalang:1,katak:-1,ular:-1,elang:-1,pengurai:0},
+ katak:{padi:-1,belalang:2,tikus:-1,ular:-1,elang:0,pengurai:0},
+ ular:{padi:-1,belalang:-1,tikus:1,katak:1,elang:-1,pengurai:0},
+ elang:{padi:-1,belalang:1,tikus:0,katak:-1,ular:1,pengurai:0},
+ pengurai:{padi:-2,belalang:-1,tikus:-1,katak:-1,ular:-1,elang:-1}
+};
+var WHY={
+ padi:'Padi adalah produsen, sumber energi semua yang lain. Tanpa padi, belalang dan tikus kehilangan makanan lebih dulu. Katak, ular, dan elang menyusul turun karena makanan mereka berkurang. Rantai makanan terputus dari dasarnya.',
+ belalang:'Katak kehilangan makanan utamanya sehingga jumlahnya turun. Padi tidak lagi dimakan belalang, jadi daunnya lebih utuh. Ular lebih banyak mencari tikus untuk menggantikan katak.',
+ tikus:'Padi tidak lagi dimakan tikus, tetapi ular dan elang kehilangan satu sumber makanan. Ular lalu lebih banyak memangsa katak, katak berkurang, dan belalang bertambah sehingga padi tetap terancam. Perubahan satu makhluk hidup menjalar ke yang lain.',
+ katak:'Belalang tidak lagi punya pemangsa, sehingga jumlahnya melonjak dan padi dimakan lebih banyak. Ular beralih memangsa tikus, sehingga tikus berkurang.',
+ ular:'Katak dan tikus tidak lagi dimangsa ular, jadi jumlahnya cenderung naik. Katak yang banyak menekan belalang, tetapi tikus yang banyak memakan lebih banyak padi. Elang kehilangan satu sumber makanan.',
+ elang:'Ular tidak lagi dimangsa elang, jadi jumlahnya naik, dan ular yang banyak memangsa lebih banyak katak. Karena katak berkurang, belalang bertambah dan padi lebih banyak dimakan.',
+ pengurai:'Bangkai dan sisa tanaman menumpuk, dan zat hara tidak kembali ke tanah. Padi tumbuh buruk, lalu semua konsumen ikut turun secara bertahap. Pengurai menutup lingkaran materi di ekosistem.'
+};
+var THINK={
+ padi:'Mengapa pengaruh yang paling cepat terasa pada belalang dan tikus?',
+ belalang:'Mengapa jumlah katak turun padahal katak tidak bersentuhan dengan padi?',
+ tikus:'Hasil panen padi tidak otomatis lebih baik saat tikus hilang. Mengapa?',
+ katak:'Apa yang terjadi pada hasil panen bila belalang bertambah banyak?',
+ ular:'Mengapa membasmi ular justru bisa merugikan petani?',
+ elang:'Mengapa hilangnya pemangsa puncak tetap memengaruhi tumbuhan padi?',
+ pengurai:'Mengapa pengurai tidak digambar dalam rantai makanan, tetapi tetap penting?'
+};
+
+var S={step:1,sel:'padi',seen:{padi:true},chain:[],found:{},fb:null,removed:null,quiz:{i:0,score:0,ans:null,done:false}};
+var lastFocus=null;
+
+/* ---------- peta ---------- */
+var NS='http://www.w3.org/2000/svg',R=32;
+function el(t,a,p){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function buildWeb(){
+  var eg=document.getElementById('edges'),ng=document.getElementById('nodes');
+  EDGES.forEach(function(e){
+    var a=SP[e[0]],b=SP[e[1]],dx=b.x-a.x,dy=b.y-a.y,L=Math.sqrt(dx*dx+dy*dy),ux=dx/L,uy=dy/L;
+    el('line',{id:'e-'+e[0]+'-'+e[1],'class':'edge'+(e[2]?' dash':''),x1:a.x+ux*(R+4),y1:a.y+uy*(R+4),x2:b.x-ux*(R+8),y2:b.y-uy*(R+8)},eg);
+  });
+  ORDER.forEach(function(k){
+    var s=SP[k],g=el('g',{id:'n-'+k,'class':'node',tabindex:0,role:'button','aria-label':s.n,transform:'translate('+s.x+','+s.y+')'},ng);
+    el('circle',{'class':'ring',r:R+7},g);
+    var c=el('circle',{'class':'body',r:R},g);c.style.fill='var(--'+s.r+'-bg)';c.style.stroke='var(--'+s.r+')';
+    var t=el('text',{'class':'em'},g);t.textContent=s.e;
+    var l=el('text',{'class':'lbl',y:R+17},g);l.textContent=s.n;
+    el('line',{'class':'cross',x1:-20,y1:-20,x2:20,y2:20},g);el('line',{'class':'cross',x1:20,y1:-20,x2:-20,y2:20},g);
+    var bd=el('g',{id:'bd-'+k,'class':'bd',transform:'translate(26,-26)'},g);el('circle',{r:13},bd);el('text',{},bd);
+    g.addEventListener('click',function(){pick(k)});
+    g.addEventListener('keydown',function(ev){if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();pick(k)}});
+  });
+  document.getElementById('legend').innerHTML=ROLES.map(function(r){return '<span class="chip r-'+r+'"><i></i>'+ROLE[r]+'</span>'}).join('');
+}
+function hotEdges(){
+  var h={};
+  if(S.step===2&&S.chain.length>1)for(var i=0;i<S.chain.length-1;i++)h[S.chain[i]+'-'+S.chain[i+1]]=1;
+  return h;
+}
+function updateWeb(){
+  var h=hotEdges(),anyHot=Object.keys(h).length>0;
+  EDGES.forEach(function(e){var n=document.getElementById('e-'+e[0]+'-'+e[1]);
+    n.setAttribute('class','edge'+(e[2]?' dash':'')+(h[e[0]+'-'+e[1]]?' hot':'')+(anyHot&&!h[e[0]+'-'+e[1]]?' dim':''))});
+  ORDER.forEach(function(k){
+    var n=document.getElementById('n-'+k),cls='node';
+    if(S.step===1&&S.sel===k)cls+=' sel';
+    if(S.step===2&&S.chain.indexOf(k)>-1)cls+=' sel';
+    if(S.step===3&&S.removed===k)cls+=' out';
+    n.setAttribute('class',cls);
+    var bd=document.getElementById('bd-'+k),on=false;
+    if(S.step===3&&S.removed&&S.removed!==k){
+      var v=FX[S.removed][k];on=true;
+      bd.setAttribute('class','bd on '+(v>0?'up':v<0?'down':'flat'));
+      bd.querySelector('text').textContent=v>0?'↑':v<0?'↓':'=';
+    }else bd.setAttribute('class','bd');
+    var lab=SP[k].n;
+    if(S.step===3&&S.removed===k)lab+=' (dihilangkan)';
+    else if(on)lab+=': '+txtFx(FX[S.removed][k]);
+    n.setAttribute('aria-label',lab);
+  });
+  var wn=document.getElementById('webnote');
+  wn.textContent=S.step===3?'Panah dan angka di tiap lingkaran menunjukkan kecenderungan jumlahnya: naik (biru), turun (merah), relatif tetap (abu-abu).':
+    S.step===2?'Garis hijau tebal menunjukkan rantai yang sedang kamu susun.':
+    'Panah menunjukkan arah perpindahan energi: dari yang dimakan menuju yang memakan. Sentuh makhluk hidup untuk mengenalnya.';
+}
+function txtFx(v){return v>=2?'naik banyak':v===1?'naik':v===0?'relatif tetap':v===-1?'turun':'turun banyak'}
+function clsFx(v){return v>0?'up':v<0?'down':'flat'}
+
+function pick(k){
+  if(S.step===1){S.sel=k;S.seen[k]=true;render('n-'+k)}
+  else if(S.step===2){addChain(k)}
+  else if(S.step===3){S.removed=k;render('n-'+k)}
+}
+
+/* ---------- navigasi ---------- */
+var STEPS=[['Kenali peran','Siapa berperan apa'],['Susun rantai','Temukan 3 rantai'],['Hilangkan satu','Amati dampaknya'],['Cek paham','5 soal singkat']];
+function renderSteps(){
+  document.getElementById('steps').innerHTML=STEPS.map(function(s,i){
+    return '<li><button type="button" data-step="'+(i+1)+'"'+(S.step===i+1?' aria-current="step"':'')+'><small>Langkah '+(i+1)+'</small><b>'+s[0]+'</b></button></li>';
+  }).join('');
+}
+document.getElementById('steps').addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;S.step=+b.getAttribute('data-step');S.fb=null;render();
+});
+
+/* ---------- rantai ---------- */
+var ALLCH=['padi>belalang>katak>ular>elang','padi>tikus>ular>elang','padi>tikus>elang'];
+function chainHtml(key){return key.split('>').map(function(k){return SP[k].e}).join(' → ')}
+function addChain(k){
+  if(S.chain.indexOf(k)>-1)return;
+  S.chain.push(k);S.fb=null;render('tok-'+k);
+}
+function checkChain(){
+  var c=S.chain,fb;
+  if(c.length<3){fb={t:'bad',m:'Pilih minimal 3 makhluk hidup, dimulai dari produsen.'}}
+  else if(c.indexOf('pengurai')>-1){fb={t:'bad',m:'Pengurai bekerja pada semua tingkat, jadi tidak termasuk dalam rantai makanan. Hapus dan coba lagi.'}}
+  else if(SP[c[0]].r!=='prod'){fb={t:'bad',m:'Rantai makanan selalu dimulai dari produsen, yaitu makhluk hidup yang membuat makanannya sendiri. Siapa itu di sawah ini?'}}
+  else{
+    var bad=-1;
+    for(var i=0;i<c.length-1;i++){if(eatenBy(c[i]).indexOf(c[i+1])<0){bad=i;break}}
+    if(bad>-1){
+      var a=c[bad],b=c[bad+1];
+      if(eatenBy(b).indexOf(a)>-1)fb={t:'bad',m:'Arah panahnya terbalik. Energi mengalir dari yang dimakan ke yang memakan: '+nm(b)+' → '+nm(a)+'.'};
+      else fb={t:'bad',m:nm(b)+' tidak memakan '+nm(a)+'. '+nm(b)+' memakan: '+list(SP[b].eats)+'.'};
+    }else{
+      var last=c[c.length-1],pred=eatenBy(last);
+      if(pred.length){fb={t:'bad',m:'Hubungannya benar, tetapi rantai belum selesai. '+nm(last)+' masih dimakan oleh '+list(pred)+'. Lanjutkan sampai pemangsa puncak.'}}
+      else{
+        var key=c.join('>');
+        if(S.found[key])fb={t:'ok',m:'Rantai ini sudah kamu temukan. Cari rantai lain yang berbeda.'};
+        else{S.found[key]=1;var n=Object.keys(S.found).length;
+          fb={t:'ok',m:n===3?'Ketiga rantai sudah ketemu. Rantai-rantai yang saling bersilangan inilah yang disebut jaring-jaring makanan. Lanjut ke langkah 3.':'Rantai benar! Kamu sudah menemukan '+n+' dari 3. Tikus dan ular muncul di lebih dari satu rantai, coba cari jalur lain.'}}
+      }
+    }
+  }
+  S.fb=fb;render('chk');
+}
+
+/* ---------- kuis ---------- */
+var QZ=[
+ {q:'Pada rantai makanan, arah panah menunjukkan…',o:['siapa yang lebih besar badannya','perpindahan energi, dari yang dimakan ke yang memakan','arah hewan berpindah tempat','dari pemakan menuju yang dimakan'],a:1,
+  w:'Panah menunjukkan aliran energi: dari yang dimakan menuju yang memakan, misalnya padi → belalang.'},
+ {q:'Mengapa padi disebut produsen?',o:['karena jumlahnya paling banyak','karena dipanen manusia','karena membuat makanannya sendiri lewat fotosintesis','karena memakan hewan kecil'],a:2,
+  w:'Produsen membuat makanan sendiri dari bahan sederhana dengan bantuan cahaya matahari.'},
+ {q:'Katak di sawah hilang. Perubahan yang paling mungkin terjadi lebih dulu adalah…',o:['belalang bertambah banyak','padi tumbuh lebih subur','elang bertambah banyak','jamur tidak lagi mengurai'],a:0,
+  w:'Belalang kehilangan pemangsanya sehingga bertambah, lalu padi lebih banyak dimakan.'},
+ {q:'Apa peran jamur dan bakteri pengurai di ekosistem?',o:['memangsa hewan yang masih hidup','membuat makanan dari cahaya','mengurai sisa makhluk hidup menjadi hara yang dipakai tumbuhan lagi','menjadi pemangsa puncak'],a:2,
+  w:'Pengurai mengembalikan zat hara ke tanah sehingga materi di ekosistem terus berputar.'},
+ {q:'Petani membasmi semua ular di sawahnya. Dampak yang paling mungkin terjadi adalah…',o:['tikus bertambah dan padi lebih banyak dimakan','tikus berkurang karena tidak ada kompetisi','panen pasti meningkat','semua hewan lain tidak terpengaruh'],a:0,
+  w:'Ular adalah pemangsa tikus. Tanpa ular, tikus cenderung bertambah sehingga kerusakan padi meningkat.'}
+];
+function answer(i){
+  var q=S.quiz;if(q.ans!==null)return;q.ans=i;if(i===QZ[q.i].a)q.score++;render('next');
+}
+function nextQ(){
+  var q=S.quiz;if(q.i<QZ.length-1){q.i++;q.ans=null}else q.done=true;render();
+}
+function resetQ(){S.quiz={i:0,score:0,ans:null,done:false};render()}
+
+/* ---------- panel ---------- */
+function panel(){
+  var h='';
+  if(S.step===1){
+    var s=SP[S.sel],by=eatenBy(S.sel),n=Object.keys(S.seen).length;
+    h+='<h2>Kenali peran</h2><p>Sentuh tiap makhluk hidup di peta. Baca peran dan siapa memakan siapa.</p>';
+    h+='<div class="row" style="align-items:center;gap:14px"><span class="big" aria-hidden="true">'+s.e+'</span><div><h3>'+s.n+'</h3><span class="tag r-'+s.r+'">'+ROLE[s.r]+'</span></div></div>';
+    h+='<p>'+s.d+'</p>';
+    h+='<dl class="kv"><dt>Memakan</dt><dd>'+(S.sel==='pengurai'?'sisa makhluk hidup yang mati':list(s.eats))+'</dd><dt>Dimakan oleh</dt><dd>'+(S.sel==='pengurai'?'tidak ada (hara diserap padi)':list(by))+'</dd></dl>';
+    h+='<div class="prog" aria-hidden="true"><span style="width:'+(n/7*100)+'%"></span></div><p class="note">Sudah dikenali: '+n+' dari 7</p>';
+    h+='<div class="row"><button class="btn" id="go" type="button">'+(n>=7?'Lanjut ke langkah 2':'Lanjut ke langkah 2')+'</button></div>';
+  }
+  else if(S.step===2){
+    var nf=Object.keys(S.found).length;
+    h+='<h2>Susun rantai makanan</h2><p>Pilih makhluk hidup secara berurutan, mulai dari produsen. Temukan 3 rantai yang berbeda, lalu tekan Cek rantai.</p>';
+    h+='<div class="row">'+ORDER.map(function(k){return '<button type="button" class="tok" id="tok-'+k+'" data-k="'+k+'"'+(S.chain.indexOf(k)>-1?' disabled':'')+'><span aria-hidden="true">'+SP[k].e+'</span> '+SP[k].n+'</button>'}).join('')+'</div>';
+    h+='<div class="chain" aria-label="Rantai yang kamu susun">'+(S.chain.length?S.chain.map(function(k,i){return (i?'<span class="ar" aria-hidden="true">→</span>':'')+'<span class="slot">'+SP[k].e+' '+SP[k].n+'</span>'}).join(''):'<span class="note">Belum ada pilihan. Mulai dari produsen.</span>')+'</div>';
+    h+='<div class="row"><button class="btn" type="button" id="chk"'+(S.chain.length<3?' disabled':'')+'>Cek rantai</button><button class="btn alt" type="button" id="undo"'+(S.chain.length?'':' disabled')+'>Hapus yang terakhir</button><button class="btn alt" type="button" id="clr"'+(S.chain.length?'':' disabled')+'>Ulangi</button></div>';
+    if(S.fb)h+='<div class="fb '+S.fb.t+'" role="status">'+S.fb.m+'</div>';
+    h+='<h3>Rantai yang ditemukan: '+nf+' dari 3</h3><ul class="found">'+ALLCH.map(function(k,i){return S.found[k]?'<li class="got"><span>'+chainHtml(k)+'</span></li>':'<li><span class="qm">Rantai '+(i+1)+': belum ditemukan</span></li>'}).join('')+'</ul>';
+    if(nf===3)h+='<div class="row"><button class="btn" id="go" type="button">Lanjut ke langkah 3</button></div>';
+  }
+  else if(S.step===3){
+    h+='<h2>Hilangkan satu makhluk hidup</h2><p>Pilih satu makhluk hidup untuk dihilangkan dari sawah, lalu amati yang lain di peta dan di daftar ini.</p>';
+    h+='<div class="rm">'+ORDER.map(function(k){return '<button type="button" id="rm-'+k+'" data-k="'+k+'" aria-pressed="'+(S.removed===k)+'"><span class="e" aria-hidden="true">'+SP[k].e+'</span>'+SP[k].n+'</button>'}).join('')+'</div>';
+    if(S.removed){
+      var r=S.removed;
+      h+='<h3>Jika '+SP[r].n.toLowerCase()+' hilang…</h3><ul class="eff">';
+      ORDER.forEach(function(k){if(k===r)return;var v=FX[r][k];
+        h+='<li><span>'+SP[k].e+' '+SP[k].n+'</span><span class="pill '+clsFx(v)+'">'+txtFx(v)+'</span><span class="meter" aria-hidden="true"><span class="'+(v>0?'u':v<0?'d':'f')+'" style="'+(v!==0?'width:'+Math.abs(v)*22+'%':'')+'"></span></span></li>';
+      });
+      h+='</ul><p>'+WHY[r]+'</p><div class="think"><b>Coba pikirkan:</b> '+THINK[r]+'</div>';
+      h+='<div class="row"><button class="btn alt" type="button" id="rst">Pulihkan sawah</button></div>';
+    }else h+='<div class="fb">Belum ada yang dihilangkan. Pilih salah satu di atas.</div>';
+    h+='<div class="row"><button class="btn" id="go" type="button">Lanjut ke langkah 4</button></div>';
+  }
+  else{
+    var q=S.quiz;
+    h+='<h2>Cek paham</h2>';
+    if(q.done){
+      var pct=q.score/QZ.length;
+      h+='<div class="fb '+(pct>=.8?'ok':'')+'" role="status"><b>Skor kamu: '+q.score+' dari '+QZ.length+'.</b> '+(pct>=.8?'Kamu sudah memahami keseimbangan ekosistem sawah.':'Ulangi langkah 2 dan 3 bila masih ragu, lalu coba kuis lagi.')+'</div>';
+      h+='<div class="row"><button class="btn" type="button" id="again">Ulangi kuis</button><button class="btn alt" type="button" id="back">Kembali ke langkah 3</button></div>';
+    }else{
+      var Q=QZ[q.i];
+      h+='<div class="prog" aria-hidden="true"><span style="width:'+(q.i/QZ.length*100)+'%"></span></div><p class="note">Soal '+(q.i+1)+' dari '+QZ.length+'</p>';
+      h+='<div class="q"><h3>'+Q.q+'</h3><div class="opts">'+Q.o.map(function(o,i){
+        var c='opt';if(q.ans!==null){if(i===Q.a)c+=' right';else if(i===q.ans)c+=' wrong'}
+        return '<button type="button" class="'+c+'" data-i="'+i+'" id="o'+i+'"'+(q.ans!==null?' disabled':'')+'>'+o+'</button>'}).join('')+'</div></div>';
+      if(q.ans!==null){h+='<div class="fb '+(q.ans===Q.a?'ok':'bad')+'" role="status"><b>'+(q.ans===Q.a?'Tepat.':'Belum tepat.')+'</b> '+Q.w+'</div><div class="row"><button class="btn" type="button" id="next">'+(q.i<QZ.length-1?'Soal berikutnya':'Lihat skor')+'</button></div>'}
+    }
+  }
+  return h;
+}
+function render(focusId){
+  renderSteps();
+  var p=document.getElementById('panel');p.innerHTML=panel();
+  updateWeb();
+  if(focusId){var f=document.getElementById(focusId);if(f&&!f.disabled)f.focus()}
+}
+document.getElementById('panel').addEventListener('click',function(e){
+  var t=e.target.closest('button');if(!t)return;var id=t.id;
+  if(id==='go'){S.step=Math.min(4,S.step+1);S.fb=null;render();return}
+  if(id==='chk'){checkChain();return}
+  if(id==='undo'){S.chain.pop();S.fb=null;render('undo');return}
+  if(id==='clr'){S.chain=[];S.fb=null;render();return}
+  if(id==='rst'){S.removed=null;render();return}
+  if(id==='next'){nextQ();return}
+  if(id==='again'){resetQ();return}
+  if(id==='back'){S.step=3;render();return}
+  if(t.classList.contains('tok')){addChain(t.getAttribute('data-k'));return}
+  if(t.closest('.rm')){S.removed=t.getAttribute('data-k');render('rm-'+S.removed);return}
+  if(t.classList.contains('opt')){answer(+t.getAttribute('data-i'))}
+});
+
+buildWeb();render();
+})();
+</script>
+
+</body></html>
